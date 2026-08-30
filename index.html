@@ -45,6 +45,26 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
+  /* video de fondo */
+  .bg-video{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index:-1;
+    opacity:0.35;
+    filter:grayscale(0.3) contrast(1.05);
+  }
+
+  .bg-overlay{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background:linear-gradient(180deg, var(--bg) 0%, rgba(21,23,26,0.55) 30%, rgba(21,23,26,0.75) 100%);
+  }
+
   h1,h2,h3{
     font-family:'Fraunces', serif;
     font-weight:400;
@@ -168,6 +188,109 @@
     max-width:52ch;
   }
 
+  /* ---------- diario ---------- */
+  .diary-form{
+    background:var(--surface);
+    border:1px solid var(--line);
+    padding:22px;
+    margin-bottom:36px;
+  }
+
+  .diary-form textarea{
+    width:100%;
+    min-height:120px;
+    background:transparent;
+    border:none;
+    resize:vertical;
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size:0.98rem;
+    line-height:1.6;
+  }
+  .diary-form textarea::placeholder{color:var(--ink-dim);}
+  .diary-form textarea:focus{outline:none;}
+
+  .diary-form-foot{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+  }
+
+  .diary-today{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.75rem;
+    color:var(--ink-dim);
+  }
+
+  .diary-save{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.04em;
+    color:var(--bg);
+    background:var(--moss);
+    border:none;
+    padding:9px 16px;
+    border-radius:var(--radius);
+    cursor:pointer;
+    transition:background 0.2s ease;
+  }
+  .diary-save:hover{background:#8ea380;}
+
+  .diary-list{
+    display:flex;
+    flex-direction:column;
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+
+  .diary-entry{
+    background:var(--bg);
+    padding:20px 22px;
+  }
+
+  .diary-entry-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+  }
+
+  .diary-entry time{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.75rem;
+    color:var(--moss);
+  }
+
+  .diary-delete{
+    background:none;
+    border:none;
+    color:var(--ink-dim);
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.7rem;
+    cursor:pointer;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:2px 4px;
+  }
+  .diary-delete:hover{color:var(--ink);}
+
+  .diary-entry p{
+    color:var(--ink-dim);
+    font-size:0.94rem;
+    white-space:pre-wrap;
+  }
+
+  .diary-empty{
+    color:var(--ink-dim);
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.8rem;
+    padding:24px 0;
+  }
+
   /* ---------- proyectos ---------- */
   .projects{
     display:grid;
@@ -276,6 +399,11 @@
 </head>
 <body>
 
+<video class="bg-video" autoplay muted loop playsinline>
+  <source src="250395_medium.mp4" type="video/mp4">
+</video>
+<div class="bg-overlay" aria-hidden="true"></div>
+
 <div class="wrap">
   <div class="spine" aria-hidden="true"></div>
 
@@ -322,13 +450,34 @@
     </div>
   </section>
 
+  <section id="diario">
+    <div class="node" style="top:0;">
+      <svg viewBox="0 0 9 9"><circle cx="4.5" cy="4.5" r="2" fill="#7c9070"/></svg>
+    </div>
+    <div class="section-head">
+      <h2>Diario</h2>
+      <span class="eyebrow">02 / privado</span>
+    </div>
+
+    <div class="diary-form">
+      <textarea id="diaryInput" placeholder="Escribe algo para guardar hoy…"></textarea>
+      <div class="diary-form-foot">
+        <span class="diary-today" id="diaryToday"></span>
+        <button class="diary-save" id="diarySave">Guardar</button>
+      </div>
+    </div>
+
+    <div class="diary-list" id="diaryList"></div>
+    <p class="diary-empty" id="diaryEmpty" style="display:none;">Aún no hay notas guardadas.</p>
+  </section>
+
   <section id="proyectos">
     <div class="node" style="top:0;">
       <svg viewBox="0 0 9 9"><circle cx="4.5" cy="4.5" r="2" fill="#7c9070"/></svg>
     </div>
     <div class="section-head">
       <h2>Proyectos</h2>
-      <span class="eyebrow">02 / trabajo</span>
+      <span class="eyebrow">03 / trabajo</span>
     </div>
 
     <div class="projects">
@@ -362,7 +511,7 @@
     </div>
     <div class="section-head">
       <h2>Sobre mí</h2>
-      <span class="eyebrow">03 / raíz</span>
+      <span class="eyebrow">04 / raíz</span>
     </div>
     <p class="about-text">
       Escribe aquí un par de párrafos sobre ti: a qué te dedicas, qué te interesa, y qué buscas que la gente entienda al llegar a esta página. <strong>Sé directo</strong> — este espacio funciona mejor sin relleno.
@@ -378,6 +527,86 @@
     </div>
   </footer>
 </div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'diario-entries';
+  const input = document.getElementById('diaryInput');
+  const saveBtn = document.getElementById('diarySave');
+  const list = document.getElementById('diaryList');
+  const empty = document.getElementById('diaryEmpty');
+  const todayLabel = document.getElementById('diaryToday');
+
+  function formatDate(d){
+    const dt = new Date(d);
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth()+1).padStart(2,'0');
+    const day = String(dt.getDate()).padStart(2,'0');
+    return `${y}.${m}.${day}`;
+  }
+
+  todayLabel.textContent = formatDate(new Date());
+
+  function load(){
+    try{
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    }catch(e){
+      return [];
+    }
+  }
+
+  function save(entries){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  }
+
+  function render(){
+    const entries = load();
+    list.innerHTML = '';
+    if(entries.length === 0){
+      empty.style.display = 'block';
+      list.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    list.style.display = 'flex';
+
+    entries.slice().reverse().forEach(entry => {
+      const el = document.createElement('div');
+      el.className = 'diary-entry';
+      el.innerHTML = `
+        <div class="diary-entry-head">
+          <time>${formatDate(entry.date)}</time>
+          <button class="diary-delete" data-id="${entry.id}">Borrar</button>
+        </div>
+        <p></p>
+      `;
+      el.querySelector('p').textContent = entry.text;
+      list.appendChild(el);
+    });
+
+    list.querySelectorAll('.diary-delete').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        const remaining = load().filter(e => String(e.id) !== id);
+        save(remaining);
+        render();
+      });
+    });
+  }
+
+  saveBtn.addEventListener('click', () => {
+    const text = input.value.trim();
+    if(!text) return;
+    const entries = load();
+    entries.push({ id: Date.now(), date: new Date().toISOString(), text });
+    save(entries);
+    input.value = '';
+    render();
+  });
+
+  render();
+})();
+</script>
 
 </body>
 </html>
